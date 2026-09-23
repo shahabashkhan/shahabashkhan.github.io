@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Shahabashkhan Naganoor — Backend Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --base: #070B18;
+    --surface: #0D1325;
+    --surface2: #131929;
+    --cyan: #00D4FF;
+    --cyan-dim: rgba(0,212,255,0.12);
+    --cyan-glow: rgba(0,212,255,0.35);
+    --purple: #7C6EFA;
+    --purple-dim: rgba(124,110,250,0.12);
+    --white: #EEF2FF;
+    --muted: #7B8CB0;
+    --border: rgba(0,212,255,0.1);
+    --nav-bg: rgba(7,11,24,0.85);
+    --font-head: 'Space Grotesk', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'Space Mono', monospace;
+  }
+  [data-theme="light"] {
+    --base: #F0F4FF;
+    --surface: #E2E8F7;
+    --surface2: #D6DEEF;
+    --cyan: #0066CC;
+    --cyan-dim: rgba(0,102,204,0.1);
+    --cyan-glow: rgba(0,102,204,0.3);
+    --purple: #5B4FD4;
+    --purple-dim: rgba(91,79,212,0.1);
+    --white: #0F172A;
+    --muted: #4A5568;
+    --border: rgba(0,102,204,0.15);
+    --nav-bg: rgba(240,244,255,0.9);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; font-size: 16px; }
+  body {
+    background: var(--base);
+    color: var(--white);
+    font-family: var(--font-body);
+    line-height: 1.6;
+    overflow-x: hidden;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--base); }
+  ::-webkit-scrollbar-thumb { background: var(--cyan); border-radius: 2px; }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 1rem 2rem;
+    display: flex; justify-content: space-between; align-items: center;
+    background: var(--nav-bg);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    transition: background 0.3s;
+  }
+  .nav-logo {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--cyan);
+    letter-spacing: 0.05em;
+  }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-family: var(--font-body);
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--cyan); }
+  .theme-toggle {
+    background: none; border: 1px solid var(--border);
+    color: var(--muted); cursor: pointer;
+    width: 34px; height: 34px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .theme-toggle:hover {
+    border-color: var(--cyan); color: var(--cyan);
+    background: var(--cyan-dim);
+  }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 7rem 2rem 4rem;
+    position: relative; overflow: hidden;
+  }
+  .hero-inner { max-width: 1000px; margin: 0 auto; width: 100%; }
+  .hero-tag {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--cyan);
+    letter-spacing: 0.15em;
+    margin-bottom: 1.5rem;
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+  .hero-tag::before {
+    content: '';
+    display: inline-block; width: 2rem; height: 1px;
+    background: var(--cyan);
+  }
+  .hero-name {
+    font-family: var(--font-head);
+    font-size: clamp(2.8rem, 8vw, 6rem);
+    font-weight: 700;
+    line-height: 1.05;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+  }
+  .hero-name span { color: var(--cyan); }
+  .hero-role {
+    font-family: var(--font-head);
+    font-size: clamp(1.1rem, 3vw, 1.6rem);
+    font-weight: 300;
+    color: var(--muted);
+    margin-bottom: 1.8rem;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.4em;
+    line-height: 1.4;
+  }
+  .hero-role .typed-wrapper {
+    display: inline-flex;
+    align-items: center;
+    overflow: hidden;
+    height: 1.4em;
+    position: relative;
+  }
+  .hero-role .typed-text {
+    display: inline-block;
+    color: var(--purple);
+    font-weight: 600;
+    position: relative;
+    white-space: nowrap;
+    line-height: 1.4;
+  }
+  .typed-text.slide-out {
+    animation: slideUp-out 0.38s cubic-bezier(0.4,0,0.2,1) forwards;
+  }
+  .typed-text.slide-in {
+    animation: slideUp-in 0.38s cubic-bezier(0.4,0,0.2,1) forwards;
+  }
+  @keyframes slideUp-out {
+    0%   { transform: translateY(0);     opacity: 1; }
+    100% { transform: translateY(-110%); opacity: 0; }
+  }
+  @keyframes slideUp-in {
+    0%   { transform: translateY(110%);  opacity: 0; }
+    100% { transform: translateY(0);     opacity: 1; }
+  }
+  .hero-role .cursor { display: none; }
+  .hero-desc {
+    max-width: 560px;
+    font-size: 1rem;
+    color: var(--muted);
+    line-height: 1.75;
+    margin-bottom: 2.5rem;
+  }
+  .hero-ctas { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .btn-primary {
+    padding: 0.75rem 1.8rem;
+    background: var(--cyan);
+    color: var(--base);
+    font-family: var(--font-head);
+    font-weight: 600;
+    font-size: 0.9rem;
+    border: none; border-radius: 4px;
+    cursor: pointer; text-decoration: none;
+    transition: box-shadow 0.2s, transform 0.2s;
+    display: inline-block;
+  }
+  .btn-primary:hover {
+    box-shadow: 0 0 28px var(--cyan-glow);
+    transform: translateY(-1px);
+  }
+  .btn-ghost {
+    padding: 0.75rem 1.8rem;
+    background: transparent;
+    color: var(--cyan);
+    font-family: var(--font-head);
+    font-weight: 500;
+    font-size: 0.9rem;
+    border: 1px solid var(--cyan);
+    border-radius: 4px;
+    cursor: pointer; text-decoration: none;
+    transition: background 0.2s, box-shadow 0.2s;
+    display: inline-block;
+  }
+  .btn-ghost:hover {
+    background: var(--cyan-dim);
+    box-shadow: 0 0 20px var(--cyan-glow);
+  }
+
+  /* hero grid bg */
+  .hero-grid {
+    position: absolute; inset: 0; z-index: -1;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  .hero-glow {
+    position: absolute; right: -10%; top: 10%;
+    width: 600px; height: 600px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(124,110,250,0.08) 0%, transparent 70%);
+    z-index: -1;
+  }
+
+  /* ── IMPACT STATS ── */
+  #stats {
+    padding: 4rem 2rem;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .stats-grid {
+    max-width: 1000px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 2rem; text-align: center;
+  }
+  .stat-item {}
+  .stat-number {
+    font-family: var(--font-head);
+    font-size: 3rem; font-weight: 700;
+    color: var(--cyan);
+    line-height: 1;
+    margin-bottom: 0.4rem;
+  }
+  .stat-label {
+    font-size: 0.82rem;
+    color: var(--muted);
+    font-weight: 400;
+    line-height: 1.4;
+  }
+
+  /* ── SECTIONS ── */
+  section { padding: 6rem 2rem; }
+  .section-inner { max-width: 1000px; margin: 0 auto; }
+  .section-head {
+    display: flex; align-items: center; gap: 1rem;
+    margin-bottom: 3rem;
+  }
+  .section-num {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--cyan);
+    opacity: 0.6;
+  }
+  .section-title {
+    font-family: var(--font-head);
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 600;
+    color: var(--white);
+  }
+  .section-line {
+    flex: 1; height: 1px;
+    background: var(--border);
+  }
+
+  /* ── ABOUT ── */
+  .about-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 4rem; align-items: start;
+  }
+  .about-text p {
+    color: var(--muted);
+    line-height: 1.8;
+    margin-bottom: 1rem;
+    font-size: 0.97rem;
+  }
+  .about-text p strong { color: var(--white); font-weight: 500; }
+  .about-highlights { display: flex; flex-direction: column; gap: 1rem; }
+  .highlight-card {
+    padding: 1.2rem 1.5rem;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--cyan);
+    border-radius: 4px;
+  }
+  .highlight-card h4 {
+    font-family: var(--font-head);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--cyan);
+    margin-bottom: 0.3rem;
+  }
+  .highlight-card p {
+    font-size: 0.83rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* ── SKILLS ── */
+  #skills { background: var(--surface); }
+  .skills-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+  .skill-category {
+    padding: 1.5rem;
+    background: var(--base);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    transition: border-color 0.2s;
+  }
+  .skill-category:hover { border-color: var(--cyan); }
+  .skill-cat-title {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--cyan);
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+  }
+  .skill-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .tag {
+    padding: 0.3rem 0.7rem;
+    background: var(--cyan-dim);
+    color: var(--cyan);
+    font-size: 0.78rem;
+    font-family: var(--font-mono);
+    border-radius: 3px;
+    border: 1px solid rgba(0,212,255,0.2);
+  }
+  .tag.purple {
+    background: var(--purple-dim);
+    color: var(--purple);
+    border-color: rgba(124,110,250,0.2);
+  }
+
+  /* ── EXPERIENCE ── */
+  .exp-list { display: flex; flex-direction: column; gap: 2rem; }
+  .exp-card {
+    padding: 2rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    position: relative;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .exp-card:hover {
+    border-color: rgba(0,212,255,0.3);
+    box-shadow: 0 4px 40px rgba(0,212,255,0.06);
+  }
+  .exp-card::before {
+    content: '';
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: 3px; border-radius: 3px 0 0 3px;
+    background: var(--cyan);
+  }
+  .exp-card.purple-accent::before { background: var(--purple); }
+  .exp-header {
+    display: flex; justify-content: space-between;
+    align-items: flex-start; flex-wrap: wrap; gap: 0.5rem;
+    margin-bottom: 0.3rem;
+  }
+  .exp-company {
+    font-family: var(--font-head);
+    font-size: 1.1rem; font-weight: 700;
+    color: var(--white);
+  }
+  .exp-period {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--cyan);
+    background: var(--cyan-dim);
+    padding: 0.25rem 0.6rem;
+    border-radius: 3px;
+  }
+  .exp-card.purple-accent .exp-period {
+    color: var(--purple);
+    background: var(--purple-dim);
+  }
+  .exp-title {
+    font-size: 0.88rem; font-weight: 500;
+    color: var(--muted);
+    margin-bottom: 1.2rem;
+  }
+  .exp-bullets { list-style: none; display: flex; flex-direction: column; gap: 0.55rem; }
+  .exp-bullets li {
+    font-size: 0.88rem;
+    color: var(--muted);
+    padding-left: 1.2rem;
+    position: relative;
+    line-height: 1.6;
+  }
+  .exp-bullets li::before {
+    content: '▸';
+    position: absolute; left: 0;
+    color: var(--cyan); font-size: 0.7rem; top: 0.15rem;
+  }
+  .exp-card.purple-accent .exp-bullets li::before { color: var(--purple); }
+  .exp-bullets li strong { color: var(--white); font-weight: 500; }
+  .exp-bullets li.achievement {
+    color: var(--white);
+    background: rgba(0,212,255,0.05);
+    padding: 0.6rem 1rem 0.6rem 1.6rem;
+    border-radius: 4px;
+    border: 1px solid rgba(0,212,255,0.15);
+    margin-top: 0.3rem;
+  }
+  .exp-bullets li.achievement::before { color: var(--cyan); top: 0.75rem; left: 0.7rem; }
+  .exp-tech { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1.2rem; }
+
+  /* ── ACHIEVEMENTS ── */
+  #achievements { background: var(--surface); }
+  .ach-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+  .ach-card {
+    padding: 1.8rem;
+    background: var(--base);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  }
+  .ach-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(0,212,255,0.08);
+    border-color: rgba(0,212,255,0.3);
+  }
+  .ach-icon { font-size: 1.8rem; margin-bottom: 1rem; }
+  .ach-title {
+    font-family: var(--font-head);
+    font-size: 1rem; font-weight: 600;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+  }
+  .ach-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+
+  /* ── CONTACT ── */
+  #contact { text-align: center; }
+  .contact-inner { max-width: 600px; margin: 0 auto; }
+  .contact-title {
+    font-family: var(--font-head);
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+  .contact-title span { color: var(--cyan); }
+  .contact-desc { color: var(--muted); margin-bottom: 2.5rem; line-height: 1.7; }
+  .contact-links { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .contact-link {
+    display: flex; align-items: center; gap: 0.5rem;
+    padding: 0.7rem 1.4rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-family: var(--font-mono);
+    transition: color 0.2s, border-color 0.2s, background 0.2s;
+  }
+  .contact-link:hover {
+    color: var(--cyan);
+    border-color: var(--cyan);
+    background: var(--cyan-dim);
+  }
+  .contact-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.4rem 1rem;
+    background: rgba(0,255,120,0.08);
+    border: 1px solid rgba(0,255,120,0.25);
+    border-radius: 20px;
+    color: #00FF88;
+    font-size: 0.78rem;
+    font-family: var(--font-mono);
+    margin-bottom: 2rem;
+  }
+  .contact-badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: #00FF88;
+    border-radius: 50%;
+    animation: pulse-green 2s ease-in-out infinite;
+  }
+  @keyframes pulse-green {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(0,255,136,0.4); }
+    50% { opacity: 0.7; box-shadow: 0 0 0 5px rgba(0,255,136,0); }
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 2rem;
+    text-align: center;
+    border-top: 1px solid var(--border);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--muted);
+    opacity: 0.6;
+  }
+
+  /* ── MOBILE ── */
+  @media (max-width: 768px) {
+    nav { padding: 0.9rem 1.2rem; }
+    .nav-links { gap: 1rem; }
+    .nav-links li:nth-child(n+4) { display: none; }
+    #hero { padding: 6rem 1.2rem 3rem; }
+    section { padding: 4rem 1.2rem; }
+    .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .hero-ctas { flex-direction: column; }
+    .btn-primary, .btn-ghost { text-align: center; }
+    #stats { padding: 3rem 1.2rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">SKN.dev</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#achievements">Wins</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌙</button>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-inner">
+    <div class="hero-tag">Backend Software Engineer · Bengaluru, India</div>
+    <h1 class="hero-name">Shahabashkhan<br><span>Naganoor</span></h1>
+    <p class="hero-role">Building scalable systems with <span class="typed-wrapper"><span class="typed-text" id="typed">Node.js & NestJS</span></span></p>
+    <p class="hero-desc">
+      5+ years crafting enterprise-grade backend systems — from multi-tenant IAM platforms and cloud-native microservices to high-performance REST APIs. Currently securing the quantum era at QNu Labs.
+    </p>
+    <div class="hero-ctas">
+      <a href="#contact" class="btn-primary">Get in Touch</a>
+      <a href="#experience" class="btn-ghost">View My Work</a>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div id="stats">
+  <div class="stats-grid">
+    <div class="stat-item">
+      <div class="stat-number" data-target="5" data-suffix="+">0</div>
+      <div class="stat-label">Years of Backend<br>Engineering</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number" data-target="30" data-suffix="+">0</div>
+      <div class="stat-label">REST APIs Designed<br>& Delivered</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number" data-target="85" data-suffix="%">0</div>
+      <div class="stat-label">Performance Boost<br>Achieved at QNu Labs</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number" data-target="600" data-suffix="+">0</div>
+      <div class="stat-label">Users Served via<br>IAM Platform</div>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-inner">
+    <div class="section-head">
+      <span class="section-num">01</span>
+      <h2 class="section-title">About Me</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="about-grid">
+      <div class="about-text">
+        <p>I'm a Backend Software Engineer who thrives on building systems that are <strong>secure, scalable, and fast</strong>. With 5+ years of experience, I've worked across the full backend lifecycle — from initial system design and database architecture to cloud deployment and production support.</p>
+        <p>My deepest expertise is in <strong>Node.js, NestJS, TypeScript</strong>, and enterprise Identity & Access Management using <strong>Keycloak</strong>. I've built multi-tenant IAM platforms, designed event-driven async architectures, and optimized systems that handle real enterprise scale.</p>
+        <p>Currently at <strong>QNu Labs</strong>, I'm building backend infrastructure for quantum-safe cybersecurity platforms — some of the most security-critical software being built today.</p>
+        <p>I'm open to <strong>remote and hybrid opportunities</strong> where I can take full backend ownership and solve hard engineering problems.</p>
+      </div>
+      <div class="about-highlights">
+        <div class="highlight-card">
+          <h4>⚡ Current Focus</h4>
+          <p>Quantum-safe security platforms · Multi-tenant IAM · NestJS microservices · MongoDB optimization</p>
+        </div>
+        <div class="highlight-card">
+          <h4>🎯 What I Do Best</h4>
+          <p>End-to-end backend ownership · Identity & Access Management · API performance optimization · Production debugging & RCA</p>
+        </div>
+        <div class="highlight-card">
+          <h4>🌍 Work Preference</h4>
+          <p>Open to Remote · Hybrid · Bengaluru-based roles · Full-time opportunities</p>
+        </div>
+        <div class="highlight-card">
+          <h4>🎓 Education</h4>
+          <p>B.E. in Computer Science & Engineering · Government Engineering College, Haveri · 2016–2020</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-inner">
+    <div class="section-head">
+      <span class="section-num">02</span>
+      <h2 class="section-title">Technical Skills</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-category">
+        <div class="skill-cat-title">LANGUAGES</div>
+        <div class="skill-tags">
+          <span class="tag">JavaScript ES6+</span>
+          <span class="tag">TypeScript</span>
+          <span class="tag">SQL</span>
+        </div>
+      </div>
+      <div class="skill-category">
+        <div class="skill-cat-title">BACKEND FRAMEWORKS</div>
+        <div class="skill-tags">
+          <span class="tag">Node.js</span>
+          <span class="tag">NestJS</span>
+          <span class="tag">Express.js</span>
+          <span class="tag">REST APIs</span>
+          <span class="tag">Microservices</span>
+          <span class="tag">Swagger/OpenAPI</span>
+        </div>
+      </div>
+      <div class="skill-category">
+        <div class="skill-cat-title">AUTH & SECURITY</div>
+        <div class="skill-tags">
+          <span class="tag">Keycloak</span>
+          <span class="tag">JWT</span>
+          <span class="tag">OAuth 2.0</span>
+          <span class="tag">RBAC</span>
+          <span class="tag">MFA (TOTP)</span>
+          <span class="tag">Multi-Tenant IAM</span>
+          <span class="tag">OTP Auth</span>
+        </div>
+      </div>
+      <div class="skill-category">
+        <div class="skill-cat-title">DATABASES</div>
+        <div class="skill-tags">
+          <span class="tag purple">PostgreSQL</span>
+          <span class="tag purple">MongoDB</span>
+          <span class="tag purple">Redis</span>
+          <span class="tag purple">MySQL</span>
+          <span class="tag purple">SQL Server</span>
+          <span class="tag purple">Sequelize ORM</span>
+          <span class="tag purple">Mongoose</span>
+        </div>
+      </div>
+      <div class="skill-category">
+        <div class="skill-cat-title">CLOUD & DEVOPS</div>
+        <div class="skill-tags">
+          <span class="tag">AWS EC2</span>
+          <span class="tag">AWS Lambda</span>
+          <span class="tag">Amazon RDS</span>
+          <span class="tag">Amazon SQS</span>
+          <span class="tag">Amazon SNS</span>
+          <span class="tag">CI/CD</span>
+          <span class="tag">GitHub Actions</span>
+          <span class="tag">Nginx</span>
+          <span class="tag">PM2</span>
+          <span class="tag">Linux</span>
+        </div>
+      </div>
+      <div class="skill-category">
+        <div class="skill-cat-title">ARCHITECTURE & PRACTICES</div>
+        <div class="skill-tags">
+          <span class="tag purple">System Design</span>
+          <span class="tag purple">Event-Driven Arch.</span>
+          <span class="tag purple">SOLID Principles</span>
+          <span class="tag purple">MVC</span>
+          <span class="tag purple">Performance Tuning</span>
+          <span class="tag purple">RCA</span>
+          <span class="tag purple">Agile / Scrum</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-inner">
+    <div class="section-head">
+      <span class="section-num">03</span>
+      <h2 class="section-title">Experience</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="exp-list">
+
+      <!-- QNu Labs -->
+      <div class="exp-card">
+        <div class="exp-header">
+          <div class="exp-company">QNu Labs Pvt. Ltd.</div>
+          <span class="exp-period">Mar 2025 – Present</span>
+        </div>
+        <div class="exp-title">Software Engineer (Backend) · Bengaluru, Karnataka</div>
+        <ul class="exp-bullets">
+          <li>Designed and maintained enterprise backend services for <strong>QShield</strong> and <strong>QConnect</strong> — quantum-safe cybersecurity platforms — using Node.js, NestJS, TypeScript, MongoDB, and Keycloak.</li>
+          <li>Architected a <strong>multi-tenant IAM platform</strong> with Keycloak: realm-based tenant isolation, RBAC, TOTP-based MFA, JWT auth, and custom password reset — eliminating dependency on the default Keycloak UI.</li>
+          <li>Built secure RESTful APIs covering tenant, user, group & role management, SMTP configuration, and MFA workflows.</li>
+          <li>Led migration of <strong>User Management from QShield to QConnect (NestJS)</strong> ensuring full feature parity and zero regression.</li>
+          <li>Optimized MongoDB queries and indexing strategies, improving API response times across the platform.</li>
+          <li class="achievement">⚡ Key Achievement: Redesigned bulk user upload pipeline from sync to <strong>event-driven async</strong> with optimized batch I/O — reduced execution time <strong>~85%</strong> (7–8 min → &lt;1 min for 600+ users).</li>
+          <li>Resolved critical production issues through RCA, debugging, and hotfix deployments in Agile sprints.</li>
+        </ul>
+        <div class="exp-tech">
+          <span class="tag">Node.js</span><span class="tag">NestJS</span><span class="tag">TypeScript</span>
+          <span class="tag">MongoDB</span><span class="tag">Keycloak</span><span class="tag">JWT</span>
+          <span class="tag">MFA (TOTP)</span><span class="tag">RBAC</span><span class="tag">REST APIs</span>
+        </div>
+      </div>
+
+      <!-- AntWalk -->
+      <div class="exp-card purple-accent">
+        <div class="exp-header">
+          <div class="exp-company">AntWalk</div>
+          <span class="exp-period">Jan 2024 – Mar 2025</span>
+        </div>
+        <div class="exp-title">Associate Software Engineer · Remote</div>
+        <ul class="exp-bullets">
+          <li>Developed and maintained scalable REST APIs using Node.js, Express.js, TypeScript, and PostgreSQL for enterprise SaaS applications.</li>
+          <li><strong>Optimized PostgreSQL schemas</strong>, indexing strategies, and SQL queries — reduced query execution time and improved backend efficiency.</li>
+          <li>Integrated <strong>Redis caching</strong> for high-read endpoints and <strong>AWS Lambda</strong> for serverless async workloads.</li>
+          <li>Provided production support and collaborated across Agile sprint cycles with frontend and DevOps teams.</li>
+        </ul>
+        <div class="exp-tech">
+          <span class="tag purple">Node.js</span><span class="tag purple">TypeScript</span>
+          <span class="tag purple">PostgreSQL</span><span class="tag purple">Redis</span>
+          <span class="tag purple">AWS Lambda</span><span class="tag purple">Express.js</span>
+        </div>
+      </div>
+
+      <!-- Navachetana -->
+      <div class="exp-card">
+        <div class="exp-header">
+          <div class="exp-company">Navachetana Microfin Services Pvt. Ltd.</div>
+          <span class="exp-period">Dec 2020 – Jul 2023</span>
+        </div>
+        <div class="exp-title">Backend Developer (Executive – MIS) · Haveri, Karnataka</div>
+        <ul class="exp-bullets">
+          <li>Developed backend modules, RESTful APIs, and reporting workflows using Node.js and SQL databases for internal MIS applications serving <strong>100+ branches</strong>.</li>
+          <li>Designed and optimized SQL queries and stored procedures, improving data processing and report generation speed.</li>
+          <li>Built and maintained business-critical backend services while deepening expertise in PostgreSQL, AWS, and modern cloud architecture patterns.</li>
+        </ul>
+        <div class="exp-tech">
+          <span class="tag">Node.js</span><span class="tag">Express.js</span>
+          <span class="tag">MySQL</span><span class="tag">MSSQL</span><span class="tag">REST APIs</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ACHIEVEMENTS -->
+<section id="achievements">
+  <div class="section-inner">
+    <div class="section-head">
+      <span class="section-num">04</span>
+      <h2 class="section-title">Key Achievements</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="ach-grid">
+      <div class="ach-card">
+        <div class="ach-icon">⚡</div>
+        <div class="ach-title">85% Performance Uplift</div>
+        <div class="ach-desc">Redesigned bulk user upload pipeline from synchronous to event-driven async architecture at QNu Labs — cut execution time from 7–8 minutes to under 1 minute for 600+ users.</div>
+      </div>
+      <div class="ach-card">
+        <div class="ach-icon">🔐</div>
+        <div class="ach-title">Enterprise IAM Platform</div>
+        <div class="ach-desc">Architected a multi-tenant Identity & Access Management platform with Keycloak — supporting RBAC, MFA (TOTP), JWT auth, and isolated tenant realms adopted by enterprise clients.</div>
+      </div>
+      <div class="ach-card">
+        <div class="ach-icon">🚀</div>
+        <div class="ach-title">Zero-Regression Migration</div>
+        <div class="ach-desc">Led migration of User Management from QShield to QConnect (NestJS) — full feature parity, seamless integration, and backward compatibility with no service disruption.</div>
+      </div>
+      <div class="ach-card">
+        <div class="ach-icon">🗄️</div>
+        <div class="ach-title">Database Performance</div>
+        <div class="ach-desc">Improved PostgreSQL query performance at AntWalk through schema refactoring and index optimization — significantly reduced API latency on critical endpoints.</div>
+      </div>
+      <div class="ach-card">
+        <div class="ach-icon">☁️</div>
+        <div class="ach-title">End-to-End AWS Ownership</div>
+        <div class="ach-desc">Sole backend engineer across multiple products — handled system design, AWS deployment (EC2, RDS, SQS, Lambda), auth, DB architecture, and production support independently.</div>
+      </div>
+      <div class="ach-card">
+        <div class="ach-icon">🛡️</div>
+        <div class="ach-title">Production Reliability</div>
+        <div class="ach-desc">Resolved critical production issues through root cause analysis (RCA), debugging, and production-safe hotfix deployments — improving stability and reducing recurring incidents.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-inner">
+    <div class="contact-inner">
+      <div class="contact-badge">Available for new opportunities</div>
+      <h2 class="contact-title">Let's build something<br><span>great together</span></h2>
+      <p class="contact-desc">I'm currently open to remote, hybrid, and Bengaluru-based backend engineering roles. If you're looking for someone who takes full ownership of backend systems — from design to production — let's talk.</p>
+      <div class="contact-links">
+        <a href="mailto:shahabashkhann@gmail.com" class="contact-link">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+          shahabashkhann@gmail.com
+        </a>
+        <a href="https://linkedin.com/in/shahabashkhan" target="_blank" class="contact-link">
+          <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+          LinkedIn
+        </a>
+        <a href="tel:+919986820486" class="contact-link">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.14 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.05 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21 16.92z"/></svg>
+          +91 9986820486
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Designed & built with care · Shahabashkhan Naganoor · Bengaluru, India · 2026
+</footer>
+
+<script>
+  /* ── SLOT MACHINE ROLL ── */
+  const words = ['Node.js & NestJS', 'TypeScript', 'AWS & Cloud', 'Keycloak & IAM', 'PostgreSQL & MongoDB'];
+  let wi = 0;
+  const el = document.getElementById('typed');
+  el.textContent = words[0];
+  setInterval(() => {
+    el.classList.add('slide-out');
+    setTimeout(() => {
+      wi = (wi + 1) % words.length;
+      el.textContent = words[wi];
+      el.classList.remove('slide-out');
+      el.classList.add('slide-in');
+      setTimeout(() => el.classList.remove('slide-in'), 400);
+    }, 360);
+  }, 2600);
+
+  /* ── THEME TOGGLE ── */
+  const toggleBtn = document.getElementById('themeToggle');
+  let isLight = false;
+  toggleBtn.addEventListener('click', () => {
+    isLight = !isLight;
+    document.documentElement.setAttribute('data-theme', isLight ? 'light' : '');
+    toggleBtn.textContent = isLight ? '☀️' : '🌙';
+  });
+
+  /* ── COUNTER ANIMATION ── */
+  function animateCounter(el) {
+    const target = +el.dataset.target;
+    const suffix = el.dataset.suffix || '';
+    const duration = 1800;
+    const step = 16;
+    const steps = duration / step;
+    let current = 0;
+    const increment = target / steps;
+    const timer = setInterval(() => {
+      current += increment;
+      if (current >= target) { current = target; clearInterval(timer); }
+      el.textContent = Math.floor(current) + suffix;
+    }, step);
+  }
+
+  const counters = document.querySelectorAll('[data-target]');
+  const observed = new Set();
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting && !observed.has(e.target)) {
+        observed.add(e.target);
+        animateCounter(e.target);
+      }
+    });
+  }, { threshold: 0.3 });
+  counters.forEach(c => observer.observe(c));
+</script>
+</body>
+</html>
