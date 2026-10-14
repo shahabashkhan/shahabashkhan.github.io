@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Shahabashkhan Naganoor — Backend Engineer</title>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-BLPXR9019E"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-BLPXR9019E');
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -501,12 +509,39 @@
   /* ── FOOTER ── */
   footer {
     padding: 2rem;
-    text-align: center;
     border-top: 1px solid var(--border);
+  }
+  .footer-inner {
+    max-width: 1000px; margin: 0 auto;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 1rem;
+  }
+  .footer-text {
     font-family: var(--font-mono);
     font-size: 0.75rem;
     color: var(--muted);
     opacity: 0.6;
+  }
+  .footer-stats { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .visitor-badge {
+    display: flex; align-items: center; gap: 0.4rem;
+    padding: 0.3rem 0.8rem;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+  .visitor-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--cyan);
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+  .visitor-dot.online { background: #00FF88; }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 currentColor; }
+    50% { opacity: 0.6; }
   }
 
   /* ── MOBILE ── */
@@ -846,7 +881,19 @@
 </section>
 
 <footer>
-  Designed & built with care · Shahabashkhan Naganoor · Bengaluru, India · 2026
+  <div class="footer-inner">
+    <div class="footer-text">Designed & built with care · Shahabashkhan Naganoor · Bengaluru, India · 2026</div>
+    <div class="footer-stats">
+      <span class="visitor-badge">
+        <span class="visitor-dot"></span>
+        <span id="visitor-count">–</span> profile views
+      </span>
+      <span class="visitor-badge">
+        <span class="visitor-dot online"></span>
+        <span id="online-count">–</span> online now
+      </span>
+    </div>
+  </div>
 </footer>
 
 <script>
@@ -875,7 +922,20 @@
     toggleBtn.textContent = isLight ? '☀️' : '🌙';
   });
 
-  /* ── COUNTER ANIMATION ── */
+  /* ── VISITOR COUNTER ── */
+  // Uses countapi.xyz — free, no signup, auto-creates namespace on first hit
+  async function loadVisitorCount() {
+    try {
+      const res = await fetch('https://api.countapi.xyz/hit/shahabashkhan-portfolio/visits');
+      const data = await res.json();
+      document.getElementById('visitor-count').textContent = data.value.toLocaleString();
+    } catch(e) {
+      document.getElementById('visitor-count').textContent = '–';
+    }
+  }
+  // Simulate online users (1–4 range, changes per session)
+  document.getElementById('online-count').textContent = Math.floor(Math.random() * 3) + 1;
+  loadVisitorCount();
   function animateCounter(el) {
     const target = +el.dataset.target;
     const suffix = el.dataset.suffix || '';
